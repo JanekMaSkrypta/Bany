@@ -1,0 +1,2 @@
+# Bany
+Skrypt na bany
