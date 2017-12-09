@@ -8,7 +8,7 @@ on load:
 		send "&4jhBans: &ajhBans jest aktualny!" to console
 	else:
 		send "&4jhBans: &aJest dostepna nowa aktualizacja! Instaluje ...." to console
-		download from "" to "plugins/Skript/scripts/jhBans.sk"
+		download from "https://github.com/JanekMaSkrypta/Bany/blob/master/UpdateCode" to "plugins/Skript/scripts/jhBans.sk"
 		wait 2 seconds
 		loop 100 times
 			send "&4jhBans: &ajhBans zostal zaktualizowany! (Upewnij sie ze nazwa skryptu to: jhBans.sk" to console
