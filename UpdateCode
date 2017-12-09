@@ -1,0 +1,170 @@
+on load:
+	if folder "plugins/Bans" doesn't exists:
+		create folder "plugins/Bans"
+		create folder "plugins/Bans/Bany"
+	set {current::version} to "1.0"
+	set {update::version} to contents from url "https://github.com/JanekMaSkrypta/Bany/blob/master/Version"
+	if {update::version} is {current::version}:
+		send "&4jhBans: &ajhBans jest aktualny!" to console
+	else:
+		send "&4jhBans: &aJest dostepna nowa aktualizacja! Instaluje ...." to console
+		download from "" to "plugins/Skript/scripts/jhBans.sk"
+		wait 2 seconds
+		loop 100 times
+			send "&4jhBans: &ajhBans zostal zaktualizowany! (Upewnij sie ze nazwa skryptu to: jhBans.sk" to console
+command /ban [<offlineplayer>] [<text>]:
+	permission: jhBans.cmd.ban
+	permission message: &4Blad: &cNie posiadasz permisji do (jhBans.cmd.ban)
+	trigger:
+		arg 1 is set:
+			arg 2 is set:
+				if sender is not console:
+					set {_b} to "%player%"
+					set {_reason} to "%coloured arg-2%"
+					set {_year} to "%year%"
+					set {_month} to "%month%"
+					set {_day} to "%day%"
+					set {_h} to "%hour%"
+					set {_m} to "%minute%"
+					set {_data} to "%{_year}%.%{_month}%.%{_day}% %{_h}%:%{_m}%"
+					set {reasonban::%arg 1%} to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4%{_b}%%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6NIGDY"
+					kick arg 1 due to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4%{_b}%%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6NIGDY"
+					create file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Powod" to "%{reasonban::%arg 1%}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Data" to "%{_data}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Wygasa" to "NIGDY" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					broadcast "&8&m----------------------------------------------"
+					broadcast ""
+					broadcast "&4&ljhBans &8| &7Gracz &6%arg 1% &7zostal zbanowany &6Powod: &c%{_reason}%"
+					broadcast ""
+					broadcast "&8&m----------------------------------------------"
+				else:
+					set {_reason} to "%coloured arg-2%"
+					set {_year} to "%year%"
+					set {_month} to "%month%"
+					set {_day} to "%day%"
+					set {_h} to "%hour%"
+					set {_m} to "%minute%"
+					set {_data} to "%{_year}%.%{_month}%.%{_day}% %{_h}%:%{_m}%"
+					set {reasonban::%arg 1%} to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4%{_b}%%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6NIGDY"
+					kick arg 1 due to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4Console%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6NIGDY"
+					create file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Powod" to "%{reasonban::%arg 1%}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Data" to "%{_data}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Wygasa" to "NIGDY" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					broadcast "&8&m-----------------------------------------------"
+					broadcast ""
+					broadcast "&4&ljhBans &8| &7Gracz &6%arg 1% &7zostal zbanowany &6Powod: &c%{_reason}%"
+					broadcast ""
+					broadcast "&8&m-----------------------------------------------"
+			else:
+				send "&c>> Poprawne uzycie: /ban <gracz> <powod>"
+		else:
+			send "&c>> Poprawne uzycie: /ban <gracz> <powod>"
+command /tempban [<offlineplayer>] [<number>] [<number>] [<number>] [<text>]:
+	permission: jhBans.cmd.tempban
+	permission message: &4Blad: &cNie posiadasz permisji do &c(jhBans.cmd.tempban)
+	trigger:
+		arg 1 is set:
+			arg 2 is set:
+				if sender is not console:
+					set {_b} to "%player%"
+					set {_reason} to "%coloured arg-5%"
+					set {_year} to "%year%" parsed as number
+					set {_month} to "%month%" parsed as number
+					set {_day} to "%day%" parsed as number
+					set {_h} to "%hour%" parsed as number
+					set {_m} to "%minute%" parsed as number
+					set {_data} to "%{_year}%.%{_month}%.%{_day}% %{_h}%:%{_m}%"
+					if arg-3 is set:
+						set {day2::%arg 1%} to number-arg-1
+					if arg-4 is set:
+						set {h2::%arg 1%} to number-arg-2
+					if arg-5 is set:
+						set {m2::%arg 1%} to number-arg-3
+					set {datawygasniecia::%arg 1%} to "%{day2::%arg 1%}% days %{h2::%arg 1%}% hours %{m2::%arg 1%}% minutes"
+					set {reasonban::%arg 1%} to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4%{_b}%%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6%{datawygasniecia::%arg 1%}%"
+					kick arg 1 due to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4%{_b}%%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6%{datawygasniecia::%arg 1%}%"
+					create file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Powod" to "%{reasonban::%arg 1%}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Data" to "%{_data}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Wygasa-Za" to "%{datawygasniecia::%arg 1%}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					broadcast "&8&m----------------------------------------------"
+					broadcast ""
+					broadcast "&4&ljhBans &8| &7Gracz &6%arg 1% &7zostal zbanowany &6Powod: &c%{_reason}% &6Wygasa: &c%{datawygasniecia::%arg 1%}%"
+					broadcast ""
+					broadcast "&8&m----------------------------------------------"
+					add arg-1 to {tempbanned::*}
+				else:
+					set {_reason} to "%coloured arg-5%"
+					set {_year} to "%year%" parsed as number
+					set {_month} to "%month%" parsed as number
+					set {_day} to "%day%" parsed as number
+					set {_h} to "%hour%" parsed as number
+					set {_m} to "%minute%" parsed as number
+					set {_data} to "%{_year}%.%{_month}%.%{_day}% %{_h}%:%{_m}%"
+					if arg-3 is set:
+						set {day2::%arg 1%} to number-arg-1
+					if arg-4 is set:
+						set {h2::%arg 1%} to number-arg-2
+					if arg-5 is set:
+						set {m2::%arg 1%} to number-arg-3
+					set {datawygasniecia::%arg 1%} to "%{day2::%arg 1%}% days %{h2::%arg 1%}% hours %{m2::%arg 1%}% minutes"
+					set {reasonban::%arg 1%} to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4Console%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6%{datawygasniecia::%arg 1%}%"
+					kick arg 1 due to "&4&ljhBans &7| &eZostales zbanowany &7| &4&ljhBans%nl%&7Zbanowal: &4Console%nl%&7Powod: &c%{_reason}%%nl%&7Data: &6%{_data}%%nl%&7Wygasa: &6%{datawygasniecia::%arg 1%}%"
+					create file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Powod" to "%{reasonban::%arg 1%}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Data" to "%{_data}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					set "Wygasa-Za" to "%{datawygasniecia::%arg 1%}%" in yaml file "plugins/Bans/Bany/%arg 1%.yml"
+					broadcast "&8&m----------------------------------------------"
+					broadcast ""
+					broadcast "&4&ljhBans &8| &7Gracz &6%arg 1% &7zostal zbanowany &6Powod: &c%{_reason}% &6Wygasa: &c%{datawygasniecia::%arg 1%}%"
+					broadcast ""
+					broadcast "&8&m----------------------------------------------"
+					add arg-1 to {tempbanned::*}
+			else:
+				send "&c>> Poprawne uzycie: /tempban <gracz> <day> <hour> <minute> <powod>"
+		else:
+			send "&c>> Poprawne uzycie: /tempban <gracz> <day> <hour> <minute> <powod>"
+command /checkban [<offlineplayer>]:
+	permission: jhBans.cmd.checkban
+	trigger:
+		arg 1 is set:
+			if file "plugins/Bans/Bany/%arg 1%.yml" exists:
+				set {_wygasad} to single value "Wygasa" get of "plugins/Bans/Bany/%arg 1%.yml"
+				send "&7Gracz &6%arg 1% &7posiada bana."
+				send "&7Wygasa: &6%{_wygasad}%"
+command /unban [<offlineplayer>]:
+	permission: jhBans.cmd.unban
+	trigger:
+		arg 1 is set:
+			if file "plugins/Bans/Bany/%arg 1%.yml" exists:
+				delete file "plugins/Bans/Bany/%arg 1%.yml"
+				broadcast "&4&ljhBans &8| &7Gracz &6%arg 1% &7zostal odbanowany!"
+			else:
+				send "&4&ljhBans &8| &7Gracz o nicku &6%arg 1% &7nie ma bana"
+		arg 1 is "all":
+			delete folder "plugins/Bans/Bany"
+			create folder "plugins/Bans/Bany"
+			loop 30 times:
+				broadcast "&4&ljhBans &8| &cWSZYSCY GRACZE ZOSTALI ODBANOWANI PRZEZ: &6%player%"
+every 1 minute:
+	loop {tempbanned::*}:
+		if {m2::%loop-value%} is more than 0:
+			remove 1 from {m2::%loop-value%}
+			if {m2::%loop-value%} is 0:
+				if {h2::%loop-value%} is 0:
+					if {day2::%loop-value%} is 0:
+						execute server command "unban %loop-value%"
+						remove loop-value from {tempbanned::*}
+						stop
+				set {m2::%loop-value%} to 59
+				if {h2::%loop-value%} is 0:
+					if {day2::%loop-value%} is more than 0:
+						remove 1 from {day2::%loop-value%}
+						remove 1 from {h2::%loop-value%}
+						stop
+					remove 1 from {h2::%loop-value%}
+on connect:
+	if file "plugins/Bans/Bany/%player%.yml" exists:
+		kick player due to "%{reasonban::%player%}%"
